@@ -191,7 +191,7 @@ class OrderController extends Controller
         $conversations =  DB::table('conversations')->where('order_id', $order->id)->get();
         $sw =  DB::table('submitted_works')->where('order_id', $order->id)->get();
         $attachments =  DB::table('attachments')->where('order_id', $order->id)->get();
-        return view('user.orders.order_details', compact('order', 'comments', 'conversations', 'attachments'));
+        return view('user.orders.order_details', compact('order', 'comments','attachments','conversations'));
     }
 
     protected function get_urgency_date($type, $value, $format = 'D, M j, Y')
@@ -748,7 +748,12 @@ class OrderController extends Controller
         return ['status' => 200, 'id' => $order->id, 'total' => session('total_amount')];
     }
 
-
+    public function get_conversation(Request $request)
+    {   
+        $order = DB::table('orders')->where('id', $request->id)->where('customer_id', auth()->user()->id)->first();
+        $messages = DB::table('conversations')->where('order_id', $order->id)->get();
+        return view('user.orders.order_details', compact('messages'));
+    }
 
     public function send_message(Request $request)
     {
@@ -773,7 +778,7 @@ class OrderController extends Controller
             'attachment' => $f,
             'attachment_path' => $p,
         ]);
-        return response()->json(['message' => $request->message]);
+        return response()->json(['success' => true]);
     }
 
 
