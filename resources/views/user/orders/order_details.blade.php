@@ -210,7 +210,7 @@
                             </div>
                             @endif
                         </div>
-                        <div id="revision" style="display:none">
+                        {{-- <div id="revision" style="display:none">
                             <h4 class="page-title mb-0">{{ __('Request For Revision') }}</h4>
                             <form action="{{route('user.comment')}}" method="post" enctype="multipart/form-data">
                                 @csrf
@@ -227,8 +227,8 @@
                                     <button type="submit" class="btn btn-primary my-3">Submit</button>
                                 </div>
                             </form>
-                        </div>
-                        <div id="rateOrder" style="display:none">
+                        </div> --}}
+                        {{-- <div id="rateOrder" style="display:none">
                             <h4 class="page-title mb-0">{{ __('Rate the Order') }}</h4>
                             <form action="{{route('user.rate_order', $order->id)}}" method="post">
                                 @csrf
@@ -242,7 +242,7 @@
                                     <button type="submit" class="btn btn-primary my-3">Submit</button>
                                 </div>
                             </form>
-                        </div>
+                        </div> --}}
 
 
                     </div>
@@ -259,7 +259,7 @@
             <div class="card-body pt-2">
                 <div class="box-content" style="color: #ffffff;">
                     <div class=" text-white ">
-                        <div class="row">
+                        <div class="row" id="chat">
                             <div class="p-4" id="support-messages-box"
                                 style="height:400px; overflow:scroll; overflow-x:hidden ">
                                 @foreach($conversations as $conv)
@@ -269,7 +269,7 @@
                                     <p class="font-weight-bold text-primary fs-11"><i
                                             class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{ date('Y-m-d h:i:A',
                                         strtotime($conv->created_at)) }} <span>MPW</span></p>
-                                    <p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>@if ($conv->attachment !=
+                                    <p class="fs-14 text-dark mb-1 message">{{ $conv->message }}</p>@if ($conv->attachment !=
                                     null)
 
                                     <p class="font-weight-bold fs-11 text-primary mb-1">{{ __('Attachment') }}</p>
@@ -302,17 +302,17 @@
                             <form action="{{ route('user.send_message') }}" method="post" enctype="multipart/form-data" style="padding-top: 5%;">
                                 @csrf
                                 <div class="input-box d-flex">
-                                    <input type="hidden" name="o_id" value="{{$order->id}}">
+                                    <input type="hidden" name="o_id" value="{{$order->id}}" id="o_id">
                                     <input type="hidden" name="receiver_id" value="{{$order->staff_id}}">
                                     <textarea class="form-control" style="border-radius:10px 0 0 10px !important; "
-                                        name="message" placeholder="Enter your reply message here..."></textarea>
+                                        name="message" placeholder="Enter your reply message here..." id="message"></textarea>
                                     <label class="filebutton">
                                         <i class="fas fa-paperclip color-dark"
                                             style="margin-left:-26px; margin-top:20px; color:black"></i>
                                         <span><input type="file" id="myfile" name="myfile"></span>
                                     </label>
 
-                                    <button class="btn btn-info" style="border-radius:0 10px 10px 0 !important; "><i
+                                    <button class="btn btn-info" style="border-radius:0 10px 10px 0 !important; " id="send"><i
                                             class="fas fa-paper-plane"></i></button>
 
                                 </div>
@@ -724,16 +724,38 @@
     function scrollToBottom() {
       supportMessagesBox.scrollTop = supportMessagesBox.scrollHeight;
     }
-  
-    // Call the scrollToBottom function to initially scroll to the bottom
+
     scrollToBottom();
-  
-    // You can call the scrollToBottom function whenever new content is added to the chat box
-    // For example, after adding a new message:
-    // (Assuming you're adding a new message as a child element of the "support-messages-box")
-    // var newMessage = document.createElement('div');
-    // newMessage.textContent = "This is a new message.";
-    // supportMessagesBox.appendChild(newMessage);
-    // scrollToBottom();
   </script>
+  <script>
+    $(document).ready(function() {
+    $('#send').click(function(e) {
+        e.preventDefault();
+        var order_id = $('#o_id').val();
+        var content = $('#message').val();
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('user.send_message') }}",
+            data: {
+                '_token': "{{ csrf_token() }}",
+                'message': content // Change 'content' to 'message' to match your server-side code,
+                'o_id': order_id
+            },
+            success: function(data) {
+                console.log(data);
+                $('#message').val('');
+                $('#support-messages-box').append('<p class="message">' + data.message + '</p>');
+            }
+        });
+    });
+
+    // Polling for new messages every 2 seconds
+    setInterval(function() {
+        $.get("{{ route('user.chat') }}", function(data) {
+            $('#support-messages-box').html(data);
+        });
+    }, 2000);
+});
+
+</script>
     @endsection

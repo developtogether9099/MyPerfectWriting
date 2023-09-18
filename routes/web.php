@@ -627,6 +627,7 @@ Route::group(['prefix' => 'user', 'middleware' => ['verified', '2fa.verify', 'ro
 		
         Route::get('/unpaid_order/edit/{id}', 'edit_unpaid_order')->name('user.edit_unpaid_order');
                 Route::post('/upaid_order/update/{id}', 'update_order')->name('user.update_unpaid_order');
+                Route::get('/chat','get_conversation')->name('user.chat');
                 Route::post('/send_message', 'send_message')->name('user.send_message'); 
                 Route::post('/rate_order/{id}', 'rate_order')->name('user.rate_order'); 
             });
