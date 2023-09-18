@@ -50,7 +50,7 @@ class OrderController extends Controller
             //)
         //);/
 
-        $this->client = new PayPalHttpClient($this->environment());
+        // $this->client = new PayPalHttpClient($this->environment());
     }
 
     private function environment()
@@ -754,15 +754,17 @@ class OrderController extends Controller
     {
         $f = '';
         $p = '';
+
         if ($request->hasFile('myfile')) {
             $path = public_path('/user_files');
-
             $filenameWithExt = $request->file('myfile')->getClientOriginalName();
             $f = $filenameWithExt;
             $p = asset('/user_files') . '/' . $filenameWithExt;
             $request->myfile->move($path, $filenameWithExt);
         }
+
         $w = DB::table('writers')->where('id', $request->receiver_id)->first();
+
         DB::table('conversations')->insert([
             'order_id' => $request->o_id,
             'message' => $request->message,
@@ -771,10 +773,9 @@ class OrderController extends Controller
             'attachment' => $f,
             'attachment_path' => $p,
         ]);
-
-        toastr()->success(__('Message has been sent'));
-        return redirect()->back();
+        return response()->json(['message' => $request->message]);
     }
+
 
     public function rate_order($id)
     {
