@@ -42,7 +42,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Services/AdsenseService.php"
+            "app/Services/AdsenseService.php",
+            "app/Helpers/Helpers.php"
         ]
     },
     "autoload-dev": {

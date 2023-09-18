@@ -5,25 +5,25 @@
 <link href="{{URL::asset('plugins/datatable/datatables.min.css')}}" rel="stylesheet" />
 <!-- Sweet Alert CSS -->
 <link href="{{URL::asset('plugins/sweetalert/sweetalert2.min.css')}}" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 <style>
 
-
-label span input {
-    z-index: 999;
-    line-height: 0;
-    font-size: 50px;
-    position: absolute;
-    top: -2px;
-    left: -700px;
-    opacity: 0;
-    filter: alpha(opacity = 0);
-    -ms-filter: "alpha(opacity=0)";
-    cursor: pointer;
-    _cursor: hand;
-    margin: 0;
-    padding:0;
-}
-	
+    label span input {
+        z-index: 999;
+        line-height: 0;
+        font-size: 50px;
+        position: absolute;
+        top: -2px;
+        left: -700px;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        -ms-filter: "alpha(opacity=0)";
+        cursor: pointer;
+        _cursor: hand;
+        margin: 0;
+        padding: 0;
+    }
 </style>
 @endsection
 
@@ -33,8 +33,10 @@ label span input {
     <div class="page-leftheader">
         <h4 class="page-title mb-0">{{ __('Order Details') }}</h4>
         <ol class="breadcrumb mb-2">
-            <li class="breadcrumb-item"><a href="{{ route('user.dashboard') }}"><i class="fa-solid fa-id-badge mr-2 fs-12"></i>{{ __('Dashboard') }}</a></li>
-            <li class="breadcrumb-item" aria-current="page"><a href="{{ route('user.my_orders') }}">{{ __('Orders') }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('user.dashboard') }}"><i
+                        class="fa-solid fa-id-badge mr-2 fs-12"></i>{{ __('Dashboard') }}</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="{{ route('user.my_orders') }}">{{ __('Orders')
+                    }}</a></li>
         </ol>
     </div>
 
@@ -43,299 +45,287 @@ label span input {
 @endsection
 
 @section('content')
-<div class="row ">
-	
-	<div class="col-lg-8 col-md-8 col-sm-8">
-    <div class="card border-0" style="background-color: #3C3465;">
-      <div class="card-body pt-2">
-        <div class="box-content" style="color: #ffffff;">
-          <div class=" text-white ">
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <div class="card border-0" style="background-color: #3C3465;height: 96.5%;">
+            <div class="card-body pt-2">
+                <div class="box-content" style="color: #ffffff;">
+                    <div class=>
 
-           <p>
-              Order ID
-              <span class="float-right" id="btitle"> {{$order->id}} </span>
-            </p>
-            <p>
-              Title
-              <span class="float-right" id="btitle"> {{$order->title}} </span>
-            </p>
+                        <p>
+                            Order ID
+                            <span class="float-right" id="btitle"> {{$order->id}} </span>
+                        </p>
+                        <p>
+                            Title
+                            <span class="float-right" id="btitle"> {{$order->title}} </span>
+                        </p>
 
-            <p>
-              Amount
-              <span class="float-right"><i class="fa {{format_amount(1)['icon']}}"></i><span id="btotal">{{$order->total}}</span> </span>
-            </p>
-            <p>
-              Service Type
-			<?php $s = Illuminate\Support\Facades\DB::table('services')->where('id', $order->service_id)->first(); ?>
-                                    
-              <span class="float-right" id="bservice"> {{$s->name}}</span>
-            </p>
-            <p>
-              Education Level
-			<?php $wl = Illuminate\Support\Facades\DB::table('work_levels')->where('id', $order->work_level_id)->first(); ?>
-              <span class="float-right" id="bwork_level"> {{$wl->name}}</span>
-            </p>
-            <p>
-              Writer Level
-              <span class="float-right" id="bplan_type">{{$order->package}} </span>
-            </p>
-            <p>
-              Quantity
-              <span class="float-right"> <span id="bqty"></span>{{$order->quantity}} Pages</span>
-            </p>
-            <p>
-              Instruction
-              <span class="float-right" id="binstruction"> {{$order->instruction}}</span>
-            </p>
-            <p>
-              Citation
-              <span class="float-right" id="bformatting">{{$order->formatting}} </span>
-            </p>
-            <p>
-              Course
-              <span class="float-right" id="bcourse"> {{$order->course}}</span>
-            </p>
-            <p>
-              Sources
-              <span class="float-right" id="bsources"> {{$order->sources}}</span>
-            </p>
-            <p>
-              Posted On
-              <span class="float-right" id="bposted">{{date('Y-m-d',strtotime($order->created_at))}} </span>
-            </p>
-            <p>
-              Deadline Date
-              <span class="float-right" id="bdeadline_date"> {{$order->dead_line}}</span>
-            </p>
-            <p>
-              Deadline Time
-              <span class="float-right" id="bdeadline_time">{{$order->deadline_time}} </span>
-            </p>
-            <p>
-              My File
+                        <p>
+                            Amount
+                            <span class="float-right"><i class="fa {{format_amount(1)['icon']}}"></i><span
+                                    id="btotal">{{$order->total}}</span> </span>
+                        </p>
+                        <p>
+                            Service Type
+                            <?php $s = Illuminate\Support\Facades\DB::table('services')->where('id', $order->service_id)->first(); ?>
 
-             
-              	<?php $files = Illuminate\Support\Facades\DB::table('attachments')->where('order_id', $order->id)
-					->where('uploader_id', $order->customer_id)->get(); ?>
-				@foreach($files as $file)
-                      <a class="float-right text-light" href="{{$file->file_path}}" download class="text-primary"><i class="fa fa-download"></i> {{$file->file}}</a> <br>
-				@endforeach
-            
-            </p>
+                            <span class="float-right" id="bservice"> {{$s->name}}</span>
+                        </p>
+                        <p>
+                            Education Level
+                            <?php $wl = Illuminate\Support\Facades\DB::table('work_levels')->where('id', $order->work_level_id)->first(); ?>
+                            <span class="float-right" id="bwork_level"> {{$wl->name}}</span>
+                        </p>
+                        <p>
+                            Writer Level
+                            <span class="float-right" id="bplan_type">{{$order->package}} </span>
+                        </p>
+                        <p>
+                            Quantity
+                            <span class="float-right"> <span id="bqty"></span>{{$order->quantity}} Pages</span>
+                        </p>
+                        <p>
+                            Instruction
+                            <span class="float-right" id="binstruction"> {{$order->instruction}}</span>
+                        </p>
+                        <p>
+                            Citation
+                            <span class="float-right" id="bformatting">{{$order->formatting}} </span>
+                        </p>
+                        <p>
+                            Course
+                            <span class="float-right" id="bcourse"> {{$order->course}}</span>
+                        </p>
+                        <p>
+                            Sources
+                            <span class="float-right" id="bsources"> {{$order->sources}}</span>
+                        </p>
+                        <p>
+                            Posted On
+                            <span class="float-right" id="bposted">{{date('Y-m-d',strtotime($order->created_at))}}
+                            </span>
+                        </p>
+                        <p>
+                            Deadline Date
+                            <span class="float-right" id="bdeadline_date"> {{$order->dead_line}}</span>
+                        </p>
+                        <p>
+                            Deadline Time
+                            <span class="float-right" id="bdeadline_time">{{$order->deadline_time}} </span>
+                        </p>
+                        <p>
+                            My File
 
-			  <p>
-			Status
-			<?php $status= Illuminate\Support\Facades\DB::table('order_statuses')->where('id', $order->order_status_id)->first();  ?>
-				  @if($status->id == 2 || $status->id == 3)
-				  <span class="float-right">In Process</span>
-				  @else 
-				  <span class="float-right">{{$status->name}}</span>
-				  @endif
 
-				
-              </p> @if($order->order_status_id == 5)<p> Writer's File
+                            <?php $files = Illuminate\Support\Facades\DB::table('attachments')->where('order_id', $order->id)
+					            ->where('uploader_id', $order->customer_id)->get(); ?>
+                            @foreach($files as $file)
+                            <a class="float-right text-light" href="{{$file->file_path}}" download
+                                class="text-primary"><i class="fa fa-download"></i> {{$file->file}}</a> <br>
+                            @endforeach
 
-			
+                        </p>
 
-			<?php $sw= Illuminate\Support\Facades\DB::table('attachments')->where('order_id', $order->id)->get();  ?>
-			  @foreach($sw as $f)
+                        <p>
+                            Status
+                            <?php $status= Illuminate\Support\Facades\DB::table('order_statuses')->where('id', $order->order_status_id)->first();  ?>
+                            @if($status->id == 2 || $status->id == 3)
+                            <span class="float-right">In Process</span>
+                            @else
+                            <span class="float-right">{{$status->name}}</span>
+                            @endif
 
-				
 
-				  <a class="float-right text-white"  href="{{$f->file_path}}" download>{{$f->file}} <i class="fa fa-download"></i></a>
-@endforeach
-				  
+                        </p> @if($order->order_status_id == 5)<p> Writer's File
 
-			
 
-				
 
-              </p>@endif
+                            <?php $sw= Illuminate\Support\Facades\DB::table('attachments')->where('order_id', $order->id)->get();  ?>
+                            @foreach($sw as $f)
 
-    
 
-          </div>
+
+                            <a class="float-right text-white" href="{{$f->file_path}}" download>{{$f->file}} <i
+                                    class="fa fa-download"></i></a>
+                            @endforeach
+                        </p>@endif
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-	
-	
+
+
     <div class="col-lg-4 col-md-4 col-sm-4">
-			@if($order->payment_status == 1 && $order->order_status_id == 4)
-		    <div class="card border-0" style="background-color: #3C3465;">
-      <div class="card-body pt-2">
-        <div class="box-content" style="color: #ffffff;">
-          <div class=" text-white ">
-	<div id="acceptForm">
-		       <h4 class="page-title mb-0">{{ __('Check your Order') }}</h4>
-			  
-			  
-       				<?php $wf = Illuminate\Support\Facades\DB::table('submitted_works')->where('order_id', $order->id)->orderBy('id','DESC')->first(); ?>
-				
-		   			@if($wf) 
+        @if($order->payment_status == 1 && $order->order_status_id == 4)
+        <div class="card border-0" style="background-color: #3C3465;">
+            <div class="card-body pt-2">
+                <div class="box-content" style="color: #ffffff;">
+                    <div class=" text-white ">
+                        <div id="acceptForm">
+                            <h4 class="page-title mb-0">{{ __('Check your Order') }}</h4>
 
-		  		
-					    <div class="form-group">
-                			<label for="">Writer's Message</label>
-							<textarea name="message" class="form-control" placeholder="Writer Message">{{$wf->message}}</textarea>
-           			 	</div>
-			     		<div class="form-group">
-							<label for="">Writer's File</label>
-						<?php $sw= Illuminate\Support\Facades\DB::table('attachments')->where('order_id', $order->id)->get();  ?>
-			  			@foreach($sw as $sf)						
-							<input type="text" name="file" value="{{$sf->file}}" class="form-control">
-							@endforeach
-						</div>
-						<div class="form-group my-2" id="downloadFile" style="display:none">
-								<label for="">Download File</label>
-							@foreach($sw as $ssf)
-								<a class="float-right text-white mx-1"  href="{{$ssf->file_path}}" download><i class="fa fa-download"></i></a>
-							@endforeach
-							
-						</div>
-			  		
-			  
-			  		<div class="form-group" id="selectOption" style="display:none">
-						<label for="">Choose</label>
-						<select name="file" class="form-control" id="select">
-							<option>Select</option>
-							<option value="rate order">rate the order</option>
-							<option value="mark a revision">mark a revision</option>
-						</select>
-					</div>
-		   		 	<div class="form-group">
-						<button type="button" id="accept" class="btn btn-primary my-3">Accept the Order</button>
-					</div>
-			  		<div class="form-group" id="afterAccept" style="display:none">
-						<button type="submit" class="btn btn-primary my-3">Submit</button>
-					</div>
-					@endif
-        	</div>
-		<div id="revision" style="display:none">	  
-			<h4 class="page-title mb-0">{{ __('Request For Revision') }}</h4>  	
-			<form action="{{route('user.comment')}}" method="post" enctype="multipart/form-data" >
-				@csrf
-				<input type="hidden" name="o_id" value="{{$order->id}}">
-				<div class="form-group">
-					<label for="">Message</label>
-					<textarea name="message" class="form-control" placeholder="Your Message"></textarea>
-				</div>
-				<div class="form-group">
-					<label for="">File</label>
-					<input type="file" name="file" class="form-control">
-				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-primary my-3">Submit</button>
-				</div>
-			</form>
-		</div>
-		<div id="rateOrder" style="display:none">	  
-			<h4 class="page-title mb-0">{{ __('Rate the Order') }}</h4>  	
-			<form action="{{route('user.rate_order', $order->id)}}" method="post">
-				@csrf
 
-				<div class="form-group">
-					<label for="">Rate 0/5</label>
-					<input type="number" name="rating" min="0" max="5" class="form-control">
-				</div>
-				
-				<div class="form-group">
-					<button type="submit" class="btn btn-primary my-3">Submit</button>
-				</div>
-			</form>
-		</div>
+                            <?php $wf = Illuminate\Support\Facades\DB::table('submitted_works')->where('order_id', $order->id)->orderBy('id','DESC')->first(); ?>
 
-	
+                            @if($wf)
+
+
+                            <div class="form-group">
+                                <label for="">Writer's Message</label>
+                                <textarea name="message" class="form-control"
+                                    placeholder="Writer Message">{{$wf->message}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Writer's File</label>
+                                <?php $sw= Illuminate\Support\Facades\DB::table('attachments')->where('order_id', $order->id)->get();  ?>
+                                @foreach($sw as $sf)
+                                <input type="text" name="file" value="{{$sf->file}}" class="form-control">
+                                @endforeach
+                            </div>
+                            <div class="form-group my-2" id="downloadFile" style="display:none">
+                                <label for="">Download File</label>
+                                @foreach($sw as $ssf)
+                                <a class="float-right text-white mx-1" href="{{$ssf->file_path}}" download><i
+                                        class="fa fa-download"></i></a>
+                                @endforeach
+
+                            </div>
+
+
+                            <div class="form-group" id="selectOption" style="display:none">
+                                <label for="">Choose</label>
+                                <select name="file" class="form-control" id="select">
+                                    <option>Select</option>
+                                    <option value="rate order">rate the order</option>
+                                    <option value="mark a revision">mark a revision</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" id="accept" class="btn btn-primary my-3">Accept the Order</button>
+                            </div>
+                            <div class="form-group" id="afterAccept" style="display:none">
+                                <button type="submit" class="btn btn-primary my-3">Submit</button>
+                            </div>
+                            @endif
+                        </div>
+                        <div id="revision" style="display:none">
+                            <h4 class="page-title mb-0">{{ __('Request For Revision') }}</h4>
+                            <form action="{{route('user.comment')}}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="o_id" value="{{$order->id}}">
+                                <div class="form-group">
+                                    <label for="">Message</label>
+                                    <textarea name="message" class="form-control" placeholder="Your Message"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">File</label>
+                                    <input type="file" name="file" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary my-3">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="rateOrder" style="display:none">
+                            <h4 class="page-title mb-0">{{ __('Rate the Order') }}</h4>
+                            <form action="{{route('user.rate_order', $order->id)}}" method="post">
+                                @csrf
+
+                                <div class="form-group">
+                                    <label for="">Rate 0/5</label>
+                                    <input type="number" name="rating" min="0" max="5" class="form-control">
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary my-3">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @endif
+
+        @if($order->payment_status == 1)
+
+
+        <div class="card border-0" style="background-color: #3C3465;">
+            <div class="card-body pt-2">
+                <div class="box-content" style="color: #ffffff;">
+                    <div class=" text-white ">
+                        <div class="row">
+                            <div class="p-4" id="support-messages-box"
+                                style="height:400px; overflow:scroll; overflow-x:hidden ">
+                                @foreach($conversations as $conv)
+                                <?php $w = Illuminate\Support\Facades\DB::table('writers')->where('username', $conv->sender)->first(); ?>
+                                @if($conv->sender == 'admin')
+                                <div class="background-white support-message mb-5">
+                                    <p class="font-weight-bold text-primary fs-11"><i
+                                            class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{ date('Y-m-d h:i:A',
+                                        strtotime($conv->created_at)) }} <span>MPW</span></p>
+                                    <p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>@if ($conv->attachment !=
+                                    null)
+
+                                    <p class="font-weight-bold fs-11 text-primary mb-1">{{ __('Attachment') }}</p>
+
+                                    <a class="font-weight-bold fs-11 text-primary" download
+                                        href="{{ $conv->attachment_path }}">{{ $conv->attachment }}</a>
+
+                                    @endif
+
+                                </div>
+                                @else
+                                <div class="background-white support-message support-response mb-5">
+                                    <p class="font-weight-bold text-primary fs-11"><i
+                                            class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{ date('Y-m-d h:i:A',
+                                        strtotime($conv->created_at)) }} <span>{{ __('Your Message') }}</span></p>
+
+                                    <p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>
+                                    @if ($conv->attachment != null)
+                                    <p class="font-weight-bold fs-11 text-primary mb-1">{{ __('Attachment') }}</p>
+                                    <a class="font-weight-bold fs-11 text-primary" download
+                                        href="{{ $conv->attachment_path }}">{{ $conv->attachment }}</a>
+                                    @endif
+                                </div>
+                                @endif
+                                @endforeach
+
+                            </div>
+
+                            {{-- Chat Messages Form--}}
+                            <form action="{{ route('user.send_message') }}" method="post" enctype="multipart/form-data" style="padding-top: 5%;">
+                                @csrf
+                                <div class="input-box d-flex">
+                                    <input type="hidden" name="o_id" value="{{$order->id}}">
+                                    <input type="hidden" name="receiver_id" value="{{$order->staff_id}}">
+                                    <textarea class="form-control" style="border-radius:10px 0 0 10px !important; "
+                                        name="message" placeholder="Enter your reply message here..."></textarea>
+                                    <label class="filebutton">
+                                        <i class="fas fa-paperclip color-dark"
+                                            style="margin-left:-26px; margin-top:20px; color:black"></i>
+                                        <span><input type="file" id="myfile" name="myfile"></span>
+                                    </label>
+
+                                    <button class="btn btn-info" style="border-radius:0 10px 10px 0 !important; "><i
+                                            class="fas fa-paper-plane"></i></button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        @endif
     </div>
-</div>
-    </div>
-</div>
-  
-		@endif
-	
-		@if($order->payment_status == 1)
-	
-   
-      <div class="card border-0" style="background-color: #3C3465;">
-     <div class="card-body pt-2">
-        <div class="box-content" style="color: #ffffff;">
-          <div class=" text-white ">
-	
-
-
-				
-					<div class="row" >	
-						<div class="p-4" id="support-messages-box" style="height:50% !mportant; overflow:scroll; overflow-x:hidden">
-@foreach($conversations as $conv)
-							<?php $w = Illuminate\Support\Facades\DB::table('writers')->where('username', $conv->sender)->first(); ?>
-							@if($conv->sender == 'admin')
-						<div class="background-white support-message mb-5">
-					<p class="font-weight-bold text-primary fs-11"><i class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{ date('Y-m-d h:i:A', strtotime($conv->created_at)) }} <span>MPW</span></p>
-						<p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>@if ($conv->attachment != null)
-
-											<p class="font-weight-bold fs-11 text-primary mb-1">{{ __('Attachment') }}</p>
-
-											<a class="font-weight-bold fs-11 text-primary" download href="{{ $conv->attachment_path }}">{{ $conv->attachment }}</a>
-
-										@endif
-
-					
-																		
-						</div>
-						@else
-								<div class="background-white support-message support-response mb-5">
-										<p class="font-weight-bold text-primary fs-11"><i class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{ date('Y-m-d h:i:A', strtotime($conv->created_at)) }} <span>{{ __('Your Message') }}</span></p>
-										
-										<p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>
-										@if ($conv->attachment != null)
-											<p class="font-weight-bold fs-11 text-primary mb-1">{{ __('Attachment') }}</p>
-											<a class="font-weight-bold fs-11 text-primary" download href="{{ $conv->attachment_path }}">{{ $conv->attachment }}</a>
-										@endif
-									</div>
-							@endif
-							@endforeach
-									
-							
-								
-						
-									
-								
-												
-						</div>
-					<form action="{{ route('user.send_message') }}" method="post" enctype="multipart/form-data">	
-						@csrf
-					<div class="input-box d-flex">
-						<input type="hidden" name="o_id" value="{{$order->id}}">
-						<input type="hidden" name="receiver_id" value="{{$order->staff_id}}">
-					
-					 
-						
-						
-        
-          	<textarea class="form-control"  style="border-radius:10px 0 0 10px !important; " name="message" placeholder="Enter your reply message here..."></textarea>
-								  <label style="width:50px" class="filebutton">
-              <i class="fas fa-paperclip color-dark" style="margin-left:-26px; margin-top:20px; color:black"></i>
-									  	<span><input type="file" id="myfile" name="myfile"></span>
-								  </label>
-         
-              <button class="btn btn-primary" style="border-radius:0 10px 10px 0 !important; "><i class="fas fa-paper-plane"></i></button>
-         
-					</div>
-					</form>
-	
-		</div>
-
-
-	
-    </div>
-</div>
-    </div>
-				
-</div>
-
-		@endif
-</div>
 
 
 
@@ -343,7 +333,7 @@ label span input {
 
 
 
-<!-- Button trigger modal 
+    <!-- Button trigger modal 
  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
   Conversations
 </button>
@@ -352,102 +342,113 @@ label span input {
 -->
 
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Conversations</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      <div class="card border-0" style="background-color: #3C3465;">
-      <div class="card-body pt-2">
-        <div class="box-content" style="color: #ffffff;">
-          <div class=" text-white ">
-	
+    <!-- Modal -->
+    {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Conversations</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card border-0" style="background-color: #3C3465;">
+                        <div class="card-body pt-2">
+                            <div class="box-content">
+                                <div class="">
 
 
-				
-					<div class="row" >	
-						<div class="p-4" id="support-messages-box" style="height:60vh; overflow:scroll; overflow-x:hidden">
-@foreach($conversations as $conv)
-							<?php $w = Illuminate\Support\Facades\DB::table('writers')->where('username', $conv->sender)->first(); ?>
-							@if($conv->sender == 'admin')
-						<div class="background-white support-message mb-5">
-					<p class="font-weight-bold text-primary fs-11"><i class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{ date('Y-m-d h:i:A', strtotime($conv->created_at)) }} <span>MPW</span></p>
-						<p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>
-																		
-						</div>
-						@else
-								<div class="background-white support-message support-response mb-5">
-										<p class="font-weight-bold text-primary fs-11"><i class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{ date('Y-m-d h:i:A', strtotime($conv->created_at)) }} <span>{{ __('Your Message') }}</span></p>
-										
-										<p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>
-										@if ($conv->attachment != null)
-											<p class="font-weight-bold fs-11 text-primary mb-1">{{ __('Attachment') }}</p>
-											<a class="font-weight-bold fs-11 text-primary" download href="{{ $conv->attachment_path }}">{{ $conv->attachment }}</a>
-										@endif
-									</div>
-							@endif
-							@endforeach
-									
-							
-								
-						
-									
-								
-												
-						</div>
-					<form action="{{ route('user.send_message') }}" method="post" enctype="multipart/form-data">	
-						@csrf
-					<div class="input-box d-flex">
-						<input type="hidden" name="o_id" value="{{$order->id}}">
-						<input type="hidden" name="receiver_id" value="{{$order->staff_id}}">
-					
-					 
-						
-						
-        
-          	<textarea class="form-control"  style="border-radius:10px 0 0 10px !important; " name="message" placeholder="Enter your reply message here..."></textarea>
-								  <label class="filebutton">
-              <i class="fas fa-paperclip color-dark" style="margin-left:-26px; margin-top:20px; color:black"></i>
-									  	<span><input type="file" id="myfile" name="myfile"></span>
-								  </label>
-         
-              <button class="btn btn-primary" style="border-radius:0 10px 10px 0 !important; "><i class="fas fa-paper-plane"></i></button>
-         
-					</div>
-					</form>
-	
-		</div>
 
 
-	
-    </div>
-</div>
-    </div>
-				
-</div>
-      </div>
+                                    <div class="row">
+                                        <div class="p-4" id="support-messages-box"
+                                            style="height:60vh; overflow:scroll; overflow-x:hidden">
+                                            @foreach($conversations as $conv)
+                                            <?php $w = Illuminate\Support\Facades\DB::table('writers')->where('username', $conv->sender)->first(); ?>
+                                            @if($conv->sender == 'admin')
+                                            <div class="background-white support-message mb-5">
+                                                <p class="font-weight-bold text-primary fs-11"><i
+                                                        class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{
+                                                    date('Y-m-d h:i:A', strtotime($conv->created_at)) }}
+                                                    <span>MPW</span>
+                                                </p>
+                                                <p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>
 
-    </div>
-  </div>
-</div>
+                                            </div>
+                                            @else
+                                            <div class="background-white support-message support-response mb-5">
+                                                <p class="font-weight-bold text-primary fs-11"><i
+                                                        class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>{{
+                                                    date('Y-m-d h:i:A', strtotime($conv->created_at)) }} <span>{{
+                                                        __('Your Message') }}</span></p>
 
-<div id="publishable_key" data-publishablekey="{{ env('STRIPE_KEY') }}"></div>
-<div id="process_url" data-processurl="{{ route('stripe_process') }}"></div>
+                                                <p class="fs-14 text-dark mb-1">{{ $conv->message }}</p>
+                                                @if ($conv->attachment != null)
+                                                <p class="font-weight-bold fs-11 text-primary mb-1">{{ __('Attachment')
+                                                    }}</p>
+                                                <a class="font-weight-bold fs-11 text-primary" download
+                                                    href="{{ $conv->attachment_path }}">{{ $conv->attachment }}</a>
+                                                @endif
+                                            </div>
+                                            @endif
+                                            @endforeach
 
-@endsection
 
-@section('js')
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-   
- var o = 0;
+
+
+
+                                        </div>
+                                        <form action="{{ route('user.send_message') }}" method="post"
+                                            enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="input-box d-flex">
+                                                <input type="hidden" name="o_id" value="{{$order->id}}">
+                                                <input type="hidden" name="receiver_id" value="{{$order->staff_id}}">
+
+                                                <textarea class="form-control"
+                                                    style="border-radius:10px 0 0 10px !important; " name="message"
+                                                    placeholder="Enter your reply message here..."></textarea>
+                                                <label class="filebutton">
+                                                    <i class="fas fa-paperclip color-dark"
+                                                        style="margin-left:-26px; margin-top:20px; color:black"></i>
+                                                    <span><input type="file" id="myfile" name="myfile"></span>
+                                                </label>
+
+                                                <button class="btn btn-primary"
+                                                    style="border-radius:0 10px 10px 0 !important; "><i
+                                                        class="fas fa-paper-plane"></i></button>
+
+                                            </div>
+                                        </form>
+
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div> --}}
+
+    <div id="publishable_key" data-publishablekey="{{ env('STRIPE_KEY') }}"></div>
+    <div id="process_url" data-processurl="{{ route('stripe_process') }}"></div>
+
+    @endsection
+
+    @section('js')
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var o = 0;
 
 	$('document').ready(function(){
 		$('#accept').click(function(){
@@ -639,13 +640,13 @@ label span input {
 
 
     }); // End of script
-</script>
+    </script>
 
 
-<script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script>
-      paypal.Buttons({
+    <script src="https://www.paypal.com/sdk/js?client-id={{ env('PAYPAL_CLIENT_ID') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+        paypal.Buttons({
             createOrder: function(data, actions) {
                 $('#paypalmsg').html('<b>' + 'WAITING ON AUTHORIZATION TO RETURN...' + '</b>');
                 $('#chkoutmsg').hide()
@@ -687,11 +688,11 @@ label span input {
 
         }).render('#paypal-button-container');
    
-</script>
+    </script>
 
 
-<script>
-$('#apply-promo').click(function(){
+    <script>
+        $('#apply-promo').click(function(){
 	var promo_code = $('#promo_code').val();
 	$.ajax({
 		type:'POST',
@@ -715,5 +716,24 @@ $('#apply-promo').click(function(){
 	});
 
 });
-</script>
-@endsection
+    </script>
+
+<script>
+    var supportMessagesBox = document.getElementById('support-messages-box');
+  
+    function scrollToBottom() {
+      supportMessagesBox.scrollTop = supportMessagesBox.scrollHeight;
+    }
+  
+    // Call the scrollToBottom function to initially scroll to the bottom
+    scrollToBottom();
+  
+    // You can call the scrollToBottom function whenever new content is added to the chat box
+    // For example, after adding a new message:
+    // (Assuming you're adding a new message as a child element of the "support-messages-box")
+    // var newMessage = document.createElement('div');
+    // newMessage.textContent = "This is a new message.";
+    // supportMessagesBox.appendChild(newMessage);
+    // scrollToBottom();
+  </script>
+    @endsection

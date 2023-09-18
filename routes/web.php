@@ -625,11 +625,11 @@ Route::group(['prefix' => 'user', 'middleware' => ['verified', '2fa.verify', 'ro
 		Route::post('/requestedForRevision', 'requestedForRevision')->name('user.requestedForRevision');
 		Route::post('/apply-promo', 'apply_promo')->name('user.apply_promo');
 		
-   Route::get('/unpaid_order/edit/{id}', 'edit_unpaid_order')->name('user.edit_unpaid_order');
-		Route::post('/upaid_order/update/{id}', 'update_order')->name('user.update_unpaid_order');
-		Route::post('/send_message', 'send_message')->name('user.send_message'); 
-		Route::post('/rate_order/{id}', 'rate_order')->name('user.rate_order'); 
-	});
+        Route::get('/unpaid_order/edit/{id}', 'edit_unpaid_order')->name('user.edit_unpaid_order');
+                Route::post('/upaid_order/update/{id}', 'update_order')->name('user.update_unpaid_order');
+                Route::post('/send_message', 'send_message')->name('user.send_message'); 
+                Route::post('/rate_order/{id}', 'rate_order')->name('user.rate_order'); 
+            });
 	
 	
 		
