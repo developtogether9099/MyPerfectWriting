@@ -299,7 +299,7 @@
                             </div>
 
                             {{-- Chat Messages Form--}}
-                            <form action="{{ route('user.send_message') }}" method="post" enctype="multipart/form-data" style="padding-top: 5%;">
+                            <form action="{{ route('user.send_message') }}" onsubmit="sendMessage(event)" method="post" enctype="multipart/form-data" style="padding-top: 5%;">
                                 @csrf
                                 <div class="input-box d-flex">
                                     <input type="hidden" name="o_id" value="{{$order->id}}" id="o_id">
@@ -392,15 +392,8 @@
                                             @endif
                                             @endforeach
 
-
-
-
-
-
-
                                         </div>
-                                        <form action="{{ route('user.send_message') }}" method="post"
-                                            enctype="multipart/form-data">
+                                        <form action="{{ route('user.send_message') }}" method="post" enctype="multipart/form-data">
                                             @csrf
                                             <div class="input-box d-flex">
                                                 <input type="hidden" name="o_id" value="{{$order->id}}">
@@ -421,11 +414,7 @@
 
                                             </div>
                                         </form>
-
                                     </div>
-
-
-
                                 </div>
                             </div>
                         </div>
@@ -693,69 +682,74 @@
 
     <script>
         $('#apply-promo').click(function(){
-	var promo_code = $('#promo_code').val();
-	$.ajax({
-		type:'POST',
-		url:"{{ route('user.apply_promo') }}",
-		data:{
-			"_token":"{{ csrf_token() }}",
-			"promo_code":promo_code,
-			"id":"{{$order->id}}"
-		},
-		success:function(data){
-			if(data.error != null) {
-				$('#promocode-error').removeClass('d-none');
-				$('#promocode-error').text(data.error)
-			} else {
-				$('#voucher-result').removeClass('d-none');
-				$('#total_discount').text(data.discount)
-				$('#gtotal').text('$'+data.total)
-			}
-			
-		}
-	});
-
-});
+            var promo_code = $('#promo_code').val();
+            $.ajax({
+                type:'POST',
+                url:"{{ route('user.apply_promo') }}",
+                data:{
+                    "_token":"{{ csrf_token() }}",
+                    "promo_code":promo_code,
+                    "id":"{{$order->id}}"
+                },
+                success:function(data){
+                    if(data.error != null) {
+                        $('#promocode-error').removeClass('d-none');
+                        $('#promocode-error').text(data.error)
+                    } else {
+                        $('#voucher-result').removeClass('d-none');
+                        $('#total_discount').text(data.discount)
+                        $('#gtotal').text('$'+data.total)
+                    }
+                    
+                }
+            });
+        });
     </script>
 
-<script>
-    var supportMessagesBox = document.getElementById('support-messages-box');
-  
-    function scrollToBottom() {
-      supportMessagesBox.scrollTop = supportMessagesBox.scrollHeight;
-    }
+    <script>
+        var supportMessagesBox = document.getElementById('support-messages-box');
+    
+        function scrollToBottom() {
+        supportMessagesBox.scrollTop = supportMessagesBox.scrollHeight;
+        }
 
-    scrollToBottom();
-  </script>
-  <script>
-    $(document).ready(function() {
-    $('#send').click(function(e) {
-        e.preventDefault();
-        var order_id = $('#o_id').val();
-        var content = $('#message').val();
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('user.send_message') }}",
-            data: {
-                '_token': "{{ csrf_token() }}",
-                'message': content // Change 'content' to 'message' to match your server-side code,
-                'o_id': order_id
-            },
-            success: function(data) {
-                console.log(data);
-                $('#message').val('');
-                $('#support-messages-box').append('<p class="message">' + data.message + '</p>');
-            }
-        });
+        scrollToBottom();
+    </script>
+    <script>
+        function sendMessage(e){
+            e.preventDefault();
+            var order_id = $('#o_id').val();
+            var content = $('#message').val();
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('user.send_message') }}",
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'message': content,  // Change 'content' to 'message' to match your server-side code
+                    'o_id': order_id
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#message').val('');
+                    $('#support-messages-box').append('<div class="background-white support-message support-response mb-5"><p class="font-weight-bold text-primary fs-11"><i class="fa-sharp fa-solid fa-calendar-clock mr-2"></i>2023-09-19 12:43:AM <span>Your Message</span></p><p class="fs-14 text-dark mb-1">' + data.message + '</p></div>');
+                    // Scroll to the bottom of the chat container
+                    var chatContainer = document.getElementById('support-messages-box');
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            });
+        }
+        $(document).ready(function() {
+        // $('#send').click(function(e) {
+            
+        // });
+
+        // Polling for new messages every 2 seconds
+        // setInterval(function() {
+        //     $.get("{{ route('user.chat') }}", function(data) {
+        //         $('#support-messages-box').html(data);
+        //     });
+        // }, 2000);
     });
-
-    // Polling for new messages every 2 seconds
-    setInterval(function() {
-        $.get("{{ route('user.chat') }}", function(data) {
-            $('#support-messages-box').html(data);
-        });
-    }, 2000);
-});
 
 </script>
     @endsection

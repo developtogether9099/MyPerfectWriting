@@ -748,12 +748,7 @@ class OrderController extends Controller
         return ['status' => 200, 'id' => $order->id, 'total' => session('total_amount')];
     }
 
-    public function get_conversation(Request $request)
-    {   
-        $order = DB::table('orders')->where('id', $request->id)->where('customer_id', auth()->user()->id)->first();
-        $messages = DB::table('conversations')->where('order_id', $order->id)->get();
-        return view('user.orders.order_details', compact('messages'));
-    }
+    
 
     public function send_message(Request $request)
     {
@@ -778,7 +773,7 @@ class OrderController extends Controller
             'attachment' => $f,
             'attachment_path' => $p,
         ]);
-        return response()->json(['success' => true]);
+        return response()->json(['message' => $request->message]);
     }
 
 
